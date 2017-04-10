@@ -1,0 +1,23 @@
+{
+  "Application": {
+    "DefaultLayout": "Default",
+    "NotFoundController" : "Home",
+    "NotFoundAction": "NotFound"
+  },
+  "Debug":{
+    "DieOnRoutingError": true,
+    "DontCacheModels": false
+  },
+  "Logging": {
+    "FileDirectory": "/logs/",
+    "Loggers": [
+      {
+        "CacheLogger": {
+          "Name": "Cache"
+        }
+      }
+    ]
+  },
+  "Caching": {
+  }
+}
