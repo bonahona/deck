@@ -102,10 +102,12 @@ class Core
         return $this->Caching;
     }
 
+    /* @return ModelHelper*/
     public function &GetModelHelper(){
         return $this->ModelHelper;
     }
 
+    /* @return int*/
     public function GetRequestUrl(){
         return $this->RequestUrl;
     }
@@ -403,6 +405,34 @@ class Core
                 trigger_error("Unknown database provider type: $databaseType", E_USER_ERROR);
             }
         }
+    }
+
+    protected function CapitalizeActionName()
+    {
+        // Read debug data from the log
+        $capitalizeActionName = false;
+        if($this->ApplicationConfig !== false) {
+            if (array_key_exists('Application', $this->ApplicationConfig)) {
+                if (array_key_exists('CapitalizeActionName', $this->ApplicationConfig['Application'])) {
+                    $capitalizeActionName = $this->ApplicationConfig['Application']['CapitalizeActionName'];
+                }
+            }
+        }
+        return $capitalizeActionName;
+    }
+
+    protected function CapitalizeControllerName()
+    {
+        // Read debug data from the log
+        $capitalizeControllerName = false;
+        if($this->ApplicationConfig !== false) {
+            if (array_key_exists('Application', $this->ApplicationConfig)) {
+                if (array_key_exists('CapitalizeControllerName', $this->ApplicationConfig['Application'])) {
+                    $capitalizeControllerName = $this->ApplicationConfig['Application']['CapitalizeControllerName'];
+                }
+            }
+        }
+        return $capitalizeControllerName;
     }
 
     protected function DebugDontCacheModels()
@@ -733,7 +763,10 @@ class Core
 
     public function CreateHandler($controllerName, $actionName, $requestData)
     {
-        // Find the controller to use
+        if($this->CapitalizeControllerName()){
+            $controllerName = ucfirst($controllerName);
+        }
+
         $controllerClassName = $controllerName . 'Controller';
         $controllerPath = $this->GetControllerPath($controllerName, $requestData);
 
@@ -757,18 +790,14 @@ class Core
 
         $controller = new $controllerClassName;
 
+        if($this->CapitalizeActionName()){
+            $actionName = ucfirst($actionName);
+        }
+
         if(!method_exists($controller, $actionName)){
             return array(
                 'error' => 1,
                 'message' => 'Called action ' . $actionName . ' does not exists'
-            );
-        }
-
-        $publicMethods = $this->GetDeclaredMethods($controllerClassName);
-        if(!in_array($actionName, $publicMethods)){
-            return array(
-                'error' => 1,
-                'message' => 'Called action is not public is does not exists'
             );
         }
 

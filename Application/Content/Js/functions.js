@@ -1,47 +1,12 @@
 var standardTitle = document.title;
 
-// Handlebars-template
-var eventTemplate = null;
-
 $(document).ready(function(){
 
-    setupHandlebarTemplates();
+    setupHandleBars();
+    startFeed();
 
-    $('.event .btn-dissmiss').on('click', function(){
-        dissmissEvent(this);
-    });
-
-    $('.event .attend').on('click', function(){
-        setAttending(this);
-    });
-
-    $('.event .maybe').on('click', function(){
-        setMaybe(this);
-    });
-
-    $('.event .decline').on('click', function(){
-        setDecline(this);
-    });
-
-    $('.expand').on('click', function() {
-        /*
-        $(this).closest('.lane').animate({
-            scrollTop: $(this).closest('.anchor').position().top - 65
-        }, 250);
-        //$(window).scrollTop($(this).closest('.anchor').offset().top - 65);
-        */
-    });
-
-    getAllEvents();
     updateTitle();
-
-    //setInterval(checkEvents, 10000);
 });
-
-function setupHandlebarTemplates(){
-    var source = $('#event-template').html();
-    eventTemplate = Handlebars.compile(source);
-}
 
 function updateTitle() {
     var notificationCount = getNotificationCount();
@@ -55,7 +20,7 @@ function updateTitle() {
 
 function getNotificationCount() {
     var totalCount = 0;
-    $('.event').each(function(){
+    $('.notify').each(function(){
         if($(this).hasClass('not-seen')){
             totalCount++;
         }
@@ -110,11 +75,11 @@ function setAttending(element) {
             "eventId": id
         },
         function(data){
-            alert(JSON.stringify(data));
             if(data.success == 1){
-                $(this).removeClass('.btn-primary');
-                $(this).addClass('.btn-success');
-                $(this).prop('disabled', true);
+                $(element).parent().find('.btn-success').removeClass('btn-success');
+                $(element).removeClass('btn-primary');
+                $(element).addClass('btn-success');
+                $(element).prop('disabled', true);
             }
         }
     );
@@ -128,7 +93,12 @@ function setMaybe(element) {
             "eventId": id
         },
         function(data){
-
+            if(data.success == 1){
+                $(element).parent().find('.btn-success').removeClass('btn-success');
+                $(element).removeClass('btn-default');
+                $(element).addClass('btn-success');
+                $(element).prop('disabled', true);
+            }
         }
     );
 }
@@ -142,56 +112,80 @@ function setDecline(element) {
         },
         function(data){
             if(data.success == 1){
-
+                $(element).parent().find('.btn-success').removeClass('btn-success');
+                $(element).removeClass('btn-danger');
+                $(element).addClass('btn-success');
+                $(element).prop('disabled', true);
             }
         }
     );
 }
 
-function getAllEvents() {
-    $.get(
-        '/Events/GetAllEvents/',
-        {},
-        function(data){
-            if(data.success == 1){
-                updatePendingEvents(data.data.pending);
-                updateComingEvents(data.data.coming);
-            }
-        }
-    )
-}
-
-function checkEvents() {
-    $.get(
-        '/Events/CheckEvents/',
-        {},
-        function(data){
-            if(data.success == 1){
-                updatePendingEvents(data.data.pending);
-                updateComingEvents(data.data.coming);
-            }
-        }
-    )
-}
-
-function updatePendingEvents(events){
+function updatePendingEvents(events, template){
     events.forEach(function(element){
-        var htmlElement = eventTemplate(element);
-        $('#pending_events').prepend(htmlElement);
+        var htmlElement = $.parseHTML(template(element));
+        var elementPosition = findElementPosition($('#event-pending .event'), element.timestamp);
+        if(elementPosition == null){
+            $('#event-pending').append(htmlElement);
+        }else {
+            $(elementPosition).after(htmlElement);
+        }
         setupNotSeenMouseOver(htmlElement);
+        setupDismiss(htmlElement);
+        setupResponseButtons(htmlElement);
     });
 }
 
-function updateComingEvents(events){
+function updateComingEvents(events, template){
     events.forEach(function(element){
-        var htmlElement = eventTemplate(element);
-        $('#coming_events').prepend(htmlElement);
+        var htmlElement = $.parseHTML(template(element));
+        var elementPosition = findElementPosition($('#event-coming .event'), element.timestamp);
+        if(elementPosition == null){
+            $('#event-coming').append(htmlElement);
+        }else {
+            $(elementPosition).after(htmlElement);
+        }
         setupNotSeenMouseOver(htmlElement);
+        setupDismiss(htmlElement);
+        setupResponseButtons(htmlElement);
     });
+}
+
+function findElementPosition(events, newEventDateTime){
+    events.each(function(){
+        var eventDateTime = $(this).attr('data-timestamp');
+        if(newEventDateTime < eventDateTime){
+            return this;
+        }
+    });
+
+    return null;
 }
 
 function setupNotSeenMouseOver(element){
-    $('.not-seen').on('mouseover', function(){
+    $(element).find('.not-seen').on('mouseover', function(){
         seenEvent(this);
     });
+}
+
+function setupDismiss(element) {
+    $(element).find('.event .btn-dismiss').on('click', function(){
+        dissmissEvent(this);
+    });
+}
+
+function setupResponseButtons(element){
+
+    $(element).find('.event .attend').on('click', function(){
+        setAttending(this);
+    });
+
+    $(element).find('.event .maybe').on('click', function(){
+        setMaybe(this);
+    });
+
+    $(element).find('.event .decline').on('click', function(){
+        setDecline(this);
+    });
+
 }

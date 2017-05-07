@@ -26,9 +26,14 @@ class FacebookHelper
 
     public function GetUserProfile($fb, $accessToken)
     {
-        $response = $fb->get('/me?fields=id,name', $accessToken);
+        $response = $fb->get('/me?fields=id,name,picture', $accessToken);
         $user = $response->getGraphUser();
         return $user;
+    }
+
+    public function GetFeed($fb, $userId, $accessToken)
+    {
+        $response = $fb->get('/me?');
     }
 
     public function GetEventsNotReplied($fb, $userId, $accessToken)

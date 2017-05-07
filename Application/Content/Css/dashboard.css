@@ -1,35 +1,16 @@
-/*
- * Base structure
- */
-
-/* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
 }
-
-
-/*
- * Global add-ons
- */
 
 .sub-header {
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
 }
 
-/*
- * Top navigation
- * Hide default border to remove 1px line.
- */
 .navbar-fixed-top {
     border: 0;
 }
 
-/*
- * Sidebar
- */
-
-/* Hide for mobile, show later */
 .sidebar {
     display: none;
 }
@@ -49,7 +30,6 @@ body {
     }
 }
 
-/* Sidebar navigation */
 .nav-sidebar {
     margin-right: -21px; /* 20px padding + 1px border */
     margin-bottom: 20px;
@@ -66,11 +46,6 @@ body {
     background-color: #428bca;
 }
 
-
-/*
- * Main content
- */
-
 .main {
     padding: 20px;
 }
@@ -83,12 +58,6 @@ body {
 .main .page-header {
     margin-top: 0;
 }
-
-
-/*
- * Placeholder dashboard ideas
- */
-
 .placeholders {
     margin-bottom: 30px;
     text-align: center;
@@ -252,6 +221,15 @@ ul
     max-height: 750px;
 }
 
+#settings-lanes .droppable
+{
+    background-color: #ddd;
+    color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 10em;
+}
+
 .navbar-nav
 {
     float: left; !important;
@@ -304,4 +282,10 @@ dd {
     width: 70%;
     padding: 0;
     margin: 0
+}
+
+.center {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
 }

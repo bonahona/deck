@@ -55,7 +55,6 @@ class Controller
     public $Cache;                      // Reference to the Core's cache object
 
     // Data sent
-
     /* @var DataHelper */
     public $Post;                       // Stores all Post data variables sent in
 
@@ -83,8 +82,12 @@ class Controller
     public $Title;
     public $Layout;
 
-    // Data that will be used in the view
+    // Data that will/can be used in the view
     public $ViewData = array();
+
+    // Can be used to queue scripts from controller fiels and then be read in the view and/or layout
+    public $JavascriptFiles = array();
+    public $CssFiles = array();
 
     function __construct(){
 
@@ -349,6 +352,26 @@ class Controller
         }else{
             return null;
         }
+    }
+
+    protected function EnqueueJavascript($javascriptFile)
+    {
+        $this->JavascriptFiles[] = $javascriptFile . "\n";
+    }
+
+    protected function EnqueueCssFiles($cssFiles)
+    {
+        $this->CssFiles[] = $cssFiles;
+    }
+
+    protected function ClearJavascript()
+    {
+        $this->JavascriptFiles = array();
+    }
+
+    protected function ClearCss()
+    {
+        $this->CssFiles = array();
     }
 
     // Function is called before the actions is

@@ -57,9 +57,17 @@ class UserController extends BaseController
 
         $_SESSION['fb_access_token'] = $accessToken;
 
-        $user = $facebookHelper->GetUserProfile($fb, $accessToken);
-        $this->SetLoggedInUser($user);
+        $facebookUser = $facebookHelper->GetUserProfile($fb, $accessToken);
 
+        $facebookUserId = $facebookUser->getId();
+        $localUser = $this->Models->LocalUser->Where(array('FacebookUserId' => $facebookUserId))->First();
+        if($localUser == null){
+            $localUser = $this->Models->LocalUser->Create(array('FacebookUserId'  => $facebookUserId));
+            $localUser->save();
+        }
+
+        //$_SESSION['fb_user'] = $facebookUser;
+        $this->SetLoggedInUser($facebookUser);
         return $this->Redirect('/');
     }
 

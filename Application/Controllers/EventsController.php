@@ -5,10 +5,11 @@ class EventsController extends AjaxController
     public function Index()
     {
         $this->Title = 'Events';
+
         return $this->View();
     }
 
-    public function GetAllEvents()
+    public function PendingEvents()
     {
         $facebookHelper = new FacebookHelper();
         $userId = $this->GetCurrentUser()['id'];
@@ -17,12 +18,11 @@ class EventsController extends AjaxController
         return $this->Json(array(
             'success' => 1,
             'data' => array(
-                'pending' => $this->GetPendingEvents($facebookHelper, $userId, $accessToken, false),
-                'coming' => $this->GetComingEvents($facebookHelper, $userId, $accessToken, false)
+                'events' => $this->GetPendingEvents($facebookHelper, $userId, $accessToken, false),
             )));
     }
 
-    public function CheckEvents()
+    public function ComingEvents()
     {
         $facebookHelper = new FacebookHelper();
         $userId = $this->GetCurrentUser()['id'];
@@ -31,11 +31,9 @@ class EventsController extends AjaxController
         return $this->Json(array(
             'success' => 1,
             'data' => array(
-                'pending' => $this->GetPendingEvents($facebookHelper, $userId, $accessToken, true),
-                'coming' => $this->GetComingEvents($facebookHelper, $userId, $accessToken, true)
-        )));
+                'events' => $this->GetComingEvents($facebookHelper, $userId, $accessToken, false)
+            )));
     }
-
 
     public function DismissEvent()
     {
@@ -211,7 +209,13 @@ class EventsController extends AjaxController
     {
         $event['event_link'] = sprintf('https://www.facebook.com/events/%s/', $event['id']);
         $event['display_start_time'] = date('l d/m H:i', $facebookHelper->ParseFacebookDateTime($event['start_time']));
-        $event['description'] = $facebookHelper->FormatDescription($event['description']);
+        $event['timestamp'] = $facebookHelper->ParseFacebookDateTime($event['start_time']);
+
+        if(isset($event['description'])) {
+            $event['description'] = $facebookHelper->FormatDescription($event['description']);
+        }else{
+            $event['description'] = '';
+        }
 
         if($this->GetIsSeen($userId, $event['id'])){
             $event['panel_type'] = 'panel-default';
@@ -224,7 +228,7 @@ class EventsController extends AjaxController
         }else if($event['rsvp_status'] == 'unsure'){
             $event['glyphicon_type'] = 'glyphicon-question-sign';
         }else{
-            $event['glyphicon_type'] = '';
+            $event['glyphicon_type'] = 'glyphicon-alert';
         }
 
         return $event;
