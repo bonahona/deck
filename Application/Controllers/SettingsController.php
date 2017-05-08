@@ -58,7 +58,7 @@ class SettingsController extends BaseController
         $this->Set('DataFeeds', FEEDS);
 
         $laneFeeds = array(null, null, null, null);
-        foreach($userPage->UserFeeds as $userFeed){
+        foreach($userPage->UserFeeds->Where(array('IsDeleted' => 0)) as $userFeed){
             $laneFeeds[$userFeed->LaneId] = FEEDS[$userFeed->FeedType];
         }
 
@@ -66,6 +66,11 @@ class SettingsController extends BaseController
 
         if($this->IsPost()){
             $userPage = $this->Data->DbParse('UserPage', $this->Models->UserPage);
+
+            $userPage->IsActive = isset($this->Post['UserPage']['IsActive']) ? 1: 0;
+            $userPage->IsNotify = isset($this->Post['UserPage']['IsNotify']) ? 1: 0;
+            $userPage->ShowInMenu = isset($this->Post['UserPage']['ShowInMenu']) ? 1: 0;
+
             $userPage->Save();
             $this->Set('UserPage', $userPage);
             return $this->View();
@@ -100,6 +105,10 @@ class SettingsController extends BaseController
             return $this->Error('Userfeed not found');
         }
 
+        if($this->GetLocalUser()->Id != $userPage->LocalUserId){
+            return $this->Error('UserPage not owned by logged in user');
+        }
+
         if($this->Models->UserFeed->Any(array('UserPageId' => $pageId, 'LaneId' => $laneId, 'IsDeleted' => 0))){
             return $this->Error('Lane already taken');
         }
@@ -128,6 +137,30 @@ class SettingsController extends BaseController
 
     public function RemoveFromLane()
     {
+        if(!$this->IsLoggedIn()){
+            return $this->Error('Not logged in');
+        }
+
+        $laneId = str_replace('lane-', '', $this->Post['laneId']);
+        $pageId = $this->Post['pageId'];
+
+        $userPage = $this->Models->UserPage->Find($pageId);
+        if($userPage == null){
+            return $this->Error('UserPage not found');
+        }
+
+        if($this->GetLocalUser()->Id != $userPage->LocalUserId){
+            return $this->Error('UserPage not owned by logged in user');
+        }
+
+        $userFeed = $userPage->UserFeeds->Where(array('LaneId' => $laneId, 'IsDeleted' => '0'))->First();
+        if($userFeed == null){
+            return $this->Error('UserFeed not found');
+        }
+
+        $userFeed->IsDeleted = 1;
+        $userFeed->Save();
+
         return  $this->Json(array('success' => 1));
     }
 }

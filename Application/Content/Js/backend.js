@@ -20,7 +20,9 @@ $(document).ready(function(){
     });
 
     $('#settings-lanes .btn-remove').on('click', function(){
-        alert('remove');
+        var element = $(this).closest('.settings-lane');
+        var laneId = element.attr('id');
+        removeFromLane(element, laneId);
     });
 });
 
@@ -61,19 +63,28 @@ function addToLane(element, feedId, laneId){
 
 function removeFromLane(element, laneId){
     var pageId  = $('#settings').attr('data-page-id');
-
     $.post(
-        'settings/removefromlane',
+        '/settings/removefromlane',
         {
             "pageId": pageId,
             "laneId": laneId
         },
         function(data){
-            /*
-            var htmlElement = $.parseHTML(emptyLaneTemplate());
-            element.after(htmlElement);
-            element.remove();
-            */
+            if(data.success == 1){
+                var htmlElement = $.parseHTML(emptyLaneTemplate({id:laneId}));
+                element.after(htmlElement);
+                element.remove();
+
+                $(htmlElement).droppable({
+                    drop: function(event, ui){
+                        var feedId = ui.draggable.attr('data-id');
+                        var laneId = $(this).attr('id');
+                        addToLane($(this),feedId, laneId);
+                    }
+                });
+            }else{
+                alert(data.message);
+            }
         }
     )
 }

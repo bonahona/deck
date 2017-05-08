@@ -1,4 +1,4 @@
-<?php if($Element == null):?>
+<?php if(!isset($Id)):?>
     <script id="empty-lane-template" type="text/x-handlebars-template">
         <div id="lane-{{id}}" class="droppable">
         </div>

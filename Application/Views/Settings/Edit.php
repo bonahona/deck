@@ -72,7 +72,11 @@
                         <div class="row">
                             <?php foreach($LaneFeeds as $id => $laneFeed):?>
                                 <div class="col-lg-3">
-                                    <?php echo $this->PartialView('Templates/FacebookFeed', array('Id' => $id, 'Element' => $laneFeed));?>
+                                    <?php if($laneFeed == null):?>
+                                        <?php echo $this->PartialView('Templates/EmptyLane', array('Id' => $id, 'Element' => $laneFeed));?>
+                                    <?php else:?>
+                                        <?php echo $this->PartialView('Templates/FacebookFeed', array('Id' => $id, 'Element' => $laneFeed));?>
+                                    <?php endif;?>
                                 </div>
                             <?php endforeach;?>
                         </div>
@@ -95,5 +99,5 @@
     </div>
 </div>
 
-<?php echo $this->PartialView('Templates/FacebookFeed', array('Id' => $id, 'Element' => null));?>
-<?php echo $this->PartialView('Templates/EmptyLane');?>
+<?php echo $this->PartialView('Templates/FacebookFeed', array('Id' => null, 'Element' => null));?>
+<?php echo $this->PartialView('Templates/EmptyLane', array('Id' => null, 'Element' => null));?>
