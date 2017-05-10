@@ -34,6 +34,9 @@
                 <?php if($this->IsLoggedIn()):?>
                     <span class="navbar-brand light-grey"><?php echo $this->GetCurrentUser()->getName();?></span>
                     <a href="/Settings"><span class="navbar-brand light-grey glyphicon glyphicon-cog"></span></a>
+                    <?php if(isset($IsAdmin) && $IsAdmin == true):?>
+                        <a href="/Admin"><span class="navbar-brand light-grey glyphicon glyphicon-edit"></span></a>
+                    <?php endif;?>
                     <li><a class="light-grey" href="/User/Logout">Log out</a></li>
                 <?php endif;?>
             </ul>

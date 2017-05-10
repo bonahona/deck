@@ -7,4 +7,10 @@ class HomeController extends BaseController
         $this->Title = 'Deck';
         return $this->View();
     }
+
+    public function NotFound()
+    {
+        $this->Title = 'Error 404';
+        return $this->View();
+    }
 }

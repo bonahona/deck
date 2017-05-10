@@ -15,6 +15,9 @@ class BaseController extends Controller
         $currentUser = $this->GetLocalUser();
         $topMenuItems = $this->Models->UserPage->Where(array('LocalUserId' => $currentUser->Id, 'IsActive' => 1, 'ShowInMenu' => 1, 'IsDeleted' => 0));
         $this->Set('TopMenuItems', $topMenuItems);
+
+        $isAdmin = ($this->GetLocalUser()->UserLevel > 0);
+        $this->Set('IsAdmin', $isAdmin);
     }
 
     protected function GetLocalUser()

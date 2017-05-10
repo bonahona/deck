@@ -2,6 +2,8 @@
 const FACEBOOK_EVENTS_PENDING = 1;
 const FACEBOOK_EVENTS_COMING = 2;
 
+const GITHUB_REPO_FEED = 11;
+
 const FEEDS = array(
     FACEBOOK_EVENTS_PENDING => array(
         'Title' => 'Facebook pending events',
@@ -14,7 +16,8 @@ const FEEDS = array(
         'LaneTitle' => 'Pending Events',
         'JavascriptFunctionName' => 'getPendingEvents',
         'DataSourceUrl' => '/events/pendingevents',
-        'CallbackFunction' => 'updatePendingEvents'
+        'CallbackFunction' => 'updatePendingEvents',
+        'IsUnique' => true
     ),
     FACEBOOK_EVENTS_COMING => array(
         'Title' => 'Facebook coming events',
@@ -27,6 +30,21 @@ const FEEDS = array(
         'LaneTitle' => 'Coming Events',
         'JavascriptFunctionName' => 'getComingEvents',
         'DataSourceUrl' => '/events/comingevents',
-        'CallbackFunction' => 'updateComingEvents'
+        'CallbackFunction' => 'updateComingEvents',
+        'IsUnique' => true
+    ),
+    GITHUB_REPO_FEED => array(
+        'Title' => 'Github Repo',
+        'Description' => 'Commits from a specfic branch of a github repo.',
+        'Icon' => 'fa fa-github',
+        'TemplateName' => 'event-template',
+        'TemplateVariableName' => 'eventTemplate',
+        'TemplatePath' => 'Templates/Event',
+        'LaneName' => 'event-coming',
+        'LaneTitle' => 'Github Repo',
+        'JavascriptFunctionName' => 'getComingEvents',
+        'DataSourceUrl' => '/events/comingevents',
+        'CallbackFunction' => 'updateComingEvents',
+        'IsUnique' => false
     ),
 );
