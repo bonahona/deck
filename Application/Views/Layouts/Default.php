@@ -72,6 +72,8 @@
     <?php endforeach;?>
 <?php endif;?>
 
+<?php echo $this->PartialView('Modals/Confirmation');?>
+
 <?php foreach($this->JavascriptFiles as $javascriptFile):?>
     <?php echo $javascriptFile;?>
 <?php endforeach;?>

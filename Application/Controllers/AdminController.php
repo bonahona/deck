@@ -90,4 +90,74 @@ class AdminController extends BaseController
             return $this->View();
         }
     }
+
+    public function DeleteFeedType($id = null)
+    {
+        if($id == null || $id == ''){
+            return $this->HttpNotFound();
+        }
+
+        $feedType = $this->Models->FeedType->Find($id);
+        if($feedType == null){
+            return $this->HttpNotFound();
+        }
+
+        $feedType->IsDeleted = 1;
+        $feedType->Save();
+
+        return $this->Redirect('/admin/viewfeedtypes');
+    }
+
+    public function AddFeedTypeMetaData($id = null)
+    {
+        if($id == null || $id == ''){
+            return $this->HttpNotFound();
+        }
+
+        $feedType = $this->Models->FeedType->Find($id);
+        if($feedType == null){
+            return $this->HttpNotFound();
+        }
+
+        $feedTypeMeta = $this->Models->FeedTypeMeta->Create(array('FeedTypeId' => $id));
+        $feedTypeMeta->Save();
+
+        return $this->Redirect('/admin/editfeedtype/' . $id);
+    }
+
+    public function SaveFeedTypeMetas($id)
+    {
+        if(!$this->IsPost()){
+            return $this->HttpNotFound();
+        }
+
+        foreach($this->Post['FeedTypeMetas'] as $feedTypeMetaData){
+            $feedTypeMeta = $this->Models->FeedTypeMeta->Find($feedTypeMetaData['Id']);
+            if($feedTypeMeta != null){
+                $feedTypeMeta->DisplayName = $feedTypeMetaData['DisplayName'];
+                $feedTypeMeta->DataName = $feedTypeMetaData['DataName'];
+                $feedTypeMeta->IsOptional = isset($feedTypeMetaData['IsOptional']) ? 1 : 0;
+                $feedTypeMeta->Save();
+            }
+        }
+
+        return $this->Redirect('/admin/editfeedtype/' . $id);
+    }
+
+    public function DeleteFeedTypeMeta($id = null)
+    {
+        if($id == null || $id == ''){
+            return $this->HttpNotFound();
+        }
+
+        $feedTypeMeta = $this->Models->FeedTypeMeta->Find($id);
+        if($feedTypeMeta == null){
+            return $this->HttpNotFound();
+        }
+
+        $feedTypeMeta->IsDeleted = 1;
+        $feedTypeMeta->Save();
+
+        return $this->Redirect('/admin/editfeedtype/' . $feedTypeMeta->FeedTypeId);
+    }
 }

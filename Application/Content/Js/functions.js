@@ -8,6 +8,13 @@ $(document).ready(function(){
     updateTitle();
 });
 
+function setupModalConfirmation(){
+    $('.modal-confirmation').on('click', function(e){
+       e.preventDefault();
+       $('#confirmation-modal').modal();
+    });
+}
+
 function updateTitle() {
     var notificationCount = getNotificationCount();
 

@@ -55,7 +55,6 @@ class SettingsController extends BaseController
 
         $localUser = $this->GetLocalUser();
         $this->Set('LocalUser', $localUser);
-        $this->Set('DataFeeds', FEEDS);
 
         $laneFeeds = array(null, null, null, null);
         foreach($userPage->UserFeeds->Where(array('IsDeleted' => 0)) as $userFeed){
@@ -63,6 +62,9 @@ class SettingsController extends BaseController
         }
 
         $this->Set('LaneFeeds', $laneFeeds);
+
+        $feedTypes = $this->Models->FeedType->Where(array('IsDeleted' => 0));
+        $this->Set('FeedTypes', $feedTypes);
 
         if($this->IsPost()){
             $userPage = $this->Data->DbParse('UserPage', $this->Models->UserPage);
@@ -78,6 +80,32 @@ class SettingsController extends BaseController
 
             $this->Set('UserPage', $userPage);
             return $this->View();
+        }
+    }
+
+    public function DeleteUserPage($id = null, $referer = null)
+    {
+        if($id == null || $id == ''){
+            return $this->HttpNotFound();
+        }
+
+        $userPage = $this->Models->UserPage->Find($id);
+        if($userPage == null){
+            return $this->HttpNotFound();
+        }
+
+        $currentUser = $this->GetLocalUser();
+        if($userPage->LocalUserId != $currentUser->Id){
+            return $this->HttpNotFound();
+        }
+
+        $userPage->IsDeleted = 1;
+        $userPage->Save();
+
+        if($referer == null) {
+            return $this->Redirect('/settings');
+        }else{
+            return $this->Redirect('/settings/edit/' . $referer);
         }
     }
 

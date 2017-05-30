@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-lg-2">
-        <?php echo $this->PartialView('Elements/SettingsSidebar', array('LocalUser' => $LocalUser));?>
+        <?php echo $this->PartialView('Elements/SettingsSidebar', array('LocalUser' => $LocalUser, 'CurrentUserPage' => (isset($UserPage) ? $UserPage : null)));?>
     </div>
 
     <div id="settings" class="col-lg-10" data-page-id="<?php echo $UserPage->Id;?>">
@@ -91,7 +91,7 @@
                         </h1>
                     </div>
                     <div class="panel-body">
-                        <?php echo $this->PartialView('Elements/DataFeeds', array('DataFeeds' => $DataFeeds));?>
+                        <?php echo $this->PartialView('Elements/DataFeedTypes', array('FeedTypes' => $FeedTypes));?>
                     </div>
                 </div>
             </div>
