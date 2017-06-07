@@ -9,7 +9,7 @@
             <?php foreach($LocalUser->UserPages->Where(array('IsDeleted' => 0)) as $userPage):?>
                 <div class="row">
                     <div class="col-lg-12">
-                        <?php if($CurrentUserPage != null && $CurrentUserPage->Id == $userPage->Id):?>
+                        <?php if(isset($CurrentUserPage) && $CurrentUserPage->Id == $userPage->Id):?>
                             <b><?php echo $userPage->PageTitle;?></b>
                                 <?php if(!$userPage->IsActive):?>
                                     <span class="light-grey">(Inactive)</span>
@@ -20,7 +20,9 @@
                             <?php if(!$userPage->IsActive):?>
                                 <span class="light-grey">(Inactive)</span>
                             <?php endif;?>
-                            <a href="<?php echo '/settings/deleteuserpage/' . $userPage->Id . '/' . $CurrentUserPage->Id;?>" class="btn btn-md btn-default pull-right"><span class="glyphicon glyphicon-trash"></span></a>
+                            <?php if(isset($CurrentUserPage)):?>
+                                <a href="<?php echo '/settings/deleteuserpage/' . $userPage->Id . '/' . $CurrentUserPage->Id;?>" class="btn btn-md btn-default pull-right"><span class="glyphicon glyphicon-trash"></span></a>
+                            <?php endif;?>
                         <?php endif;?>
                     </div>
                 </div>

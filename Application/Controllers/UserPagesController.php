@@ -17,7 +17,8 @@ class UserPagesController extends BaseController
 
         $loadedTemplatePaths = array();
         foreach($this->LoadedFeeds as $loadedFeed){
-            $loadedTemplatePaths[] = FEEDS[$loadedFeed]['TemplatePath'];
+            $feedType = $this->Models->FeedType->Find($loadedFeed);
+            $loadedTemplatePaths[] = $feedType->TemplatePath;
         }
         $loadedTemplatePaths = array_unique($loadedTemplatePaths);
         $this->Set('LoadedTemplatePaths', $loadedTemplatePaths);
@@ -52,8 +53,7 @@ class UserPagesController extends BaseController
         $this->Set('UserFeeds', $userFeeds);
 
         foreach($sortedUserFeeds as $userFeed){
-            $this->LoadFeed($userFeed->FeedType);
-            $userFeed->Feed = FEEDS[$userFeed->FeedType];
+            $this->LoadFeed($userFeed->FeedTypeId);
         }
 
         return $this->View();

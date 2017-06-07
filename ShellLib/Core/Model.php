@@ -164,6 +164,14 @@ class Model
             $result[$key] = $value;
         }
 
+        foreach($this->References as $key => $value){
+            $result[$key] = 'Proxy Object';
+        }
+
+        foreach($this->ReferenceCollections as $key => $value){
+            $result[$key] = 'Proxy Collection';
+        }
+
         return $result;
     }
 

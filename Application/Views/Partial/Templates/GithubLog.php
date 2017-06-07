@@ -1,5 +1,5 @@
-<?php if($Element == null):?>
-    <script id="facebook-feed-template" type="text/x-handlebars-template">
+<?php if(!isset($Element)):?>
+    <script id="github-log-template" type="text/x-handlebars-template">
         <div id="lane-{{laneId}}" class="panel panel-default settings-lane">
             <div class="panel-heading">
                 <h2 class="panel-title">

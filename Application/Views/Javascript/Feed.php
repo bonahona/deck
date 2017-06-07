@@ -7,7 +7,7 @@ function get<?php echo ucfirst($loadedTemplateVariablesName);?>(){
 
 function startFeed(){
     <?php foreach($LoadedFeeds as $loadedFeed):?>
-    <?php echo $loadedFeed['JavascriptFunctionName'];?>();
+    <?php echo $loadedFeed->JavascriptFunctionName;?>();
     <?php endforeach;?>
 }
 
@@ -19,13 +19,13 @@ function setupHandleBars(){
 }
 
 <?php foreach($LoadedFeeds as $loadedFeed):?>
-function <?php echo $loadedFeed['JavascriptFunctionName'];?>() {
+function <?php echo $loadedFeed->JavascriptFunctionName;?>() {
     $.get(
-        '<?php echo $loadedFeed['DataSourceUrl'];?>',
+        '<?php echo $loadedFeed->DataSourceUrl;?>',
         {},
         function(data){
             if(data.success == 1){
-                <?php echo $loadedFeed['CallbackFunction'];?>(data.data.events, <?php echo $loadedFeed['TemplateVariableName'];?>);
+                <?php echo $loadedFeed->CallbackFunction;?>(data.data.events, <?php echo $loadedFeed->TemplateVariableName;?>);
             }
         }
     )

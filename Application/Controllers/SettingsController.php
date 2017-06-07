@@ -58,7 +58,7 @@ class SettingsController extends BaseController
 
         $laneFeeds = array(null, null, null, null);
         foreach($userPage->UserFeeds->Where(array('IsDeleted' => 0)) as $userFeed){
-            $laneFeeds[$userFeed->LaneId] = FEEDS[$userFeed->FeedType];
+            $laneFeeds[$userFeed->LaneId] = $userFeed;
         }
 
         $this->Set('LaneFeeds', $laneFeeds);
@@ -141,11 +141,11 @@ class SettingsController extends BaseController
             return $this->Error('Lane already taken');
         }
 
-        if($this->Models->UserFeed->Any(array('UserPageId' => $pageId, 'FeedType' => $feedTypeId, 'IsDeleted' => 0))){
+        if($this->Models->UserFeed->Any(array('UserPageId' => $pageId, 'FeedTypeId' => $feedTypeId, 'IsDeleted' => 0))){
             return $this->Error('Userpage already contains this feed');
         }
 
-        $newUserFeed = $this->Models->UserFeed->Create(array('UserPageId' => $pageId, 'LaneId' => $laneId, 'Width' => $width, 'FeedType' => $feedTypeId));
+        $newUserFeed = $this->Models->UserFeed->Create(array('UserPageId' => $pageId, 'LaneId' => $laneId, 'Width' => $width, 'FeedTypeId' => $feedTypeId));
         $newUserFeed->Save();
 
         $feedType = FEEDS[$feedTypeId];
