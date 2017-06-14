@@ -1,5 +1,6 @@
 <?php
 require_once('AjaxController.php');
+require_once(APPLICATION_ROOT . '/' . APPLICATION_FOLDER . '/Utilities/FacebookHelper.php');
 class EventsController extends AjaxController
 {
     public function Index()

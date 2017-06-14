@@ -24,6 +24,19 @@ class UserController extends BaseController
         return $this->View();
     }
 
+    public function LoginLocal($ref = null)
+    {
+        $this->Title = 'Local Login';
+
+        if($this->IsPost()){
+
+        }else{
+            $localUser = $this->Models->LocalUser>Create();
+            $this->Set('LocalUser', $localUser);
+            return $this->View();
+        }
+    }
+
     public function LoginCallback()
     {
         $facebookHelper = new FacebookHelper();

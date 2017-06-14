@@ -48,7 +48,7 @@ class UserPagesController extends BaseController
                 'feed' => $sortedUserFeed
             );
         }
-        $this->Title = $userPage->PageTitle;
+        $this->Title = $userPage->PageTitle . ' - Deck';
         $this->Set('UserPage', $userPage);
         $this->Set('UserFeeds', $userFeeds);
 

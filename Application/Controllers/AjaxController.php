@@ -1,5 +1,4 @@
 <?php
-require_once(APPLICATION_FOLDER . '/Utilities/FacebookHelper.php');
 class AjaxController extends Controller
 {
     public function BeforeAction()

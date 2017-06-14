@@ -1,5 +1,5 @@
 <?php
-require_once('/../../ShellLib/Core/ScriptCore.php');
+require_once('../../ShellLib/Core/ScriptCore.php');
 class MigrateDatabaseCore extends ScriptCore
 {
     public function ExportDatabase($targetFile = null)
@@ -37,5 +37,15 @@ class MigrateDatabaseCore extends ScriptCore
 
         echo "Importing source file:\n";
         //echo
+    }
+
+    public function TruncateDatabase()
+    {
+        echo "Truncating current database:\n";
+        echo "========================================\n";
+        foreach($this->Models->GetAll() as $modelCollection){
+            echo "Clearing table " . $modelCollection->ModelCache['MetaData']['TableName'] . "\n";
+            $modelCollection->Clear();
+        }
     }
 }
